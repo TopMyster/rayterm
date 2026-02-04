@@ -1,2 +1,2 @@
-# appsCLI
+# Rayterm 
 raycast for the terminal

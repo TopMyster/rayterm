@@ -1,7 +1,7 @@
 import os
 
 def apps():
-    prompt = input('{appsCLI}\n')
+    prompt = input('{rayterm}\n')
     if prompt == 'all':
         apps = [f for f in sorted(os.listdir('/Applications')) if f.endswith('.app')]
         print('\n'.join(apps))
