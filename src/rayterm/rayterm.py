@@ -1,6 +1,13 @@
 import os
 import sys
+favs = ['Spotify', 'Chrome', 'Discord'] #Configure your favorite apps
 
+def open_fav(index: int):
+    try:
+        launch_app(favs[index-1])
+    except:
+        print('Number is out of range')
+    
 def launch_app(name: str):
     if sys.platform == "darwin":
         os.system(f'open -a "{name}"')
@@ -31,6 +38,8 @@ def rt():
 
     if prompt.lower() == "all":
         list_apps()
+    elif prompt.lower() == "fav":
+        open_fav(int(input('rayterm/fav > ')))
     elif prompt:
         launch_app(prompt)
     else:
