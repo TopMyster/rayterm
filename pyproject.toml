@@ -6,7 +6,7 @@ readme = "README.md"
 
 
 [project.scripts]
- apps = "rayterm.rayterm:apps"
+ rt= "rayterm.rayterm:rt"
 
 [build-system]
 requires = ["hatchling"]
