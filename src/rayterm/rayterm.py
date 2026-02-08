@@ -1,20 +1,24 @@
 import os
 import sys
-favs = ['Spotify', 'Chrome', 'Discord'] #Configure your favorite apps
+
+favs = ['Spotify', 'Chrome', 'Discord']
+
 
 def open_fav(index: int):
-    try:
-        launch_app(favs[index-1])
-    except:
+    if 1 <= index <= len(favs):
+        launch_app(favs[index - 1])
+    else:
         print('Number is out of range')
-    
+
+
 def launch_app(name: str):
     if sys.platform == "darwin":
         os.system(f'open -a "{name}"')
     elif os.name == "nt":
         os.system(f'start "" "{name}"')
     else:
-        os.system(f'xdg-open "{name}"')
+        os.system(name)
+
 
 def list_apps():
     if sys.platform == "darwin":
@@ -22,6 +26,7 @@ def list_apps():
         print("\n".join(apps))
     else:
         print("Listing all apps is only supported on macOS in this rayterm.")
+
 
 def rt():
     prompt = input(
@@ -36,14 +41,38 @@ def rt():
         "rayterm > "
     ).strip()
 
-    if prompt.lower() == "all":
+    cmd = prompt.lower()
+
+    if cmd == "all":
         list_apps()
-    elif prompt.lower() == "fav":
-        open_fav(int(input('rayterm/fav > ')))
+    elif cmd == "x":
+        return
+    elif cmd == "fav":
+        try:
+            index = int(input('rayterm/fav (number) > '))
+            open_fav(index)
+        except ValueError:
+            print("Please enter a number.")
+    elif cmd == "exit":
+        sys.exit(0)
+    elif cmd == "help":
+        print(
+            "Rayterm commands:\n"
+            "  help  - show this message\n"
+            "  fav   - open one of your favorite apps by number\n"
+            "  all   - list installed apps (macOS only)\n"
+            "  exit  - quit rayterm\n"
+            "  x     - go back / close this session\n"
+            "\n"
+            "You can also type an app name directly to launch it."
+        )
     elif prompt:
         launch_app(prompt)
     else:
-        print("Not a known command.")
+        print("Not a known command. Type 'help' for assistance")
+
+    rt()
+
 
 if __name__ == "__main__":
     rt()
