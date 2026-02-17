@@ -45,7 +45,7 @@ def rt():
 
     if cmd == "all":
         list_apps()
-    elif cmd == "x":
+    elif cmd == "q":
         return
     elif cmd == "fav":
         try:
