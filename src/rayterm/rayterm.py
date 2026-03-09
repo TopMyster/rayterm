@@ -43,6 +43,8 @@ def ask_ai(txt):
             temperature=0.7
         )
 
+        print('...\n')
+
         ai_msg = response.choices[0].message
         print(f"AI: {ai_msg.content}")
         chat_history.append({"role": "assistant", "content": ai_msg.content})
