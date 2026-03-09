@@ -38,7 +38,7 @@ def ask_ai(txt):
         api_key=API_KEY
     ) as client:
         response = client.chat.send(
-            model="minimax/minimax-m2",
+            model="openai/gpt-oss-20b",
             messages=chat_history,
             temperature=0.7
         )
