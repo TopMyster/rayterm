@@ -1,3 +1,11 @@
+Metadata-Version: 2.4
+Name: rayterm
+Version: 0.1.0
+Summary: Raycast for terminal
+Description-Content-Type: text/markdown
+Requires-Dist: openrouter
+Requires-Dist: requests>=2.26.0
+
 # Rayterm 
 #### Raycast for the terminal
 
@@ -11,19 +19,9 @@ First, clone the repository
 git clone https://github.com/TopMyster/rayterm/tree/main
 ```
 
-Edit the configurations in config.py Ex:
+Edit the configurations in rayterm.py Ex:
 ```
-# Config
-
-#Favorite Apps
-favs = [
-    'Spotify', 
-    'Chrome', 
-    'Discord'
-    ]
-
-#Openrouter API Key
-API_KEY = 'sk-or-v1-...' # Your API KEY
+favs = ['fav_app1', 'fav_app2', 'fav_app3' ]
 ```
 
 To install, while in project location run:
@@ -32,7 +30,7 @@ To install, while in project location run:
 pip3 install -e .
 ```
 
-Once installation is complete, use the rayterm with:
+Once installation is complete, use the Gemini CLI with:
 
 ```bash
 rt
@@ -48,27 +46,3 @@ Shows all apps on your computer (MacOS Only)
 ```
 apps
 ```
-
-Ask AI anything
-```
-ai
-```
-
-Search the web
-```
-/b
-```
-
-Shows list of commands
-```
-help
-```
-Exits rayterm
-```
-q
-```
-
-
-
-
-

@@ -3,14 +3,13 @@ name = "rayterm"
 version = "0.1.0"
 description = "Raycast for terminal"
 readme = "README.md"
-
+dependencies = [
+    "openrouter",
+    "requests>=2.26.0",
+]
 
 [project.scripts]
- rt= "rayterm.rayterm:rt"
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+rt = "rayterm.rayterm:rt"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/rayterm"]
