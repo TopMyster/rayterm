@@ -56,11 +56,11 @@ def search_browser(query):
 def help_rt():
     print(
         'Commands:\n'
-        '  /a   - lists all apps (only available on macOS)\n'
+        '  /l   - lists all apps (only available on macOS)\n'
         '  /f   - open a favorite app by number\n'
         '  /b   - searches browser\n'
-        '  ai   - ask AI something\n'
-        '  help - show list of commands\n'
+        '  /ai  - ask AI a question\n'
+        '  help - shows list of commands\n'
         '  q    - quit rayterm\n'
     )
 
@@ -88,10 +88,10 @@ def rt():
             cmd = prompt.strip()
             
             commands = {
-                '/a': list_apps,
+                '/l': list_apps,
                 '/f': lambda: open_fav(int(input('rayterm/fav > '))),
                 '/b': lambda: search_browser(input('rayterm/browser > ')),
-                'ai': lambda: ask_ai(input('rayterm/ai > ')),
+                '/ai': lambda: ask_ai(input('rayterm/ai > ')),
                 'help': help_rt,
                 'q': quit_rt
             }
