@@ -6,11 +6,17 @@ from openrouter import OpenRouter
 
 chat_history = []
 
-def open_fav(index: int):
-    try:
-        launch_app(favs[index - 1])
-    except IndexError:
-        print('Number is out of range')
+def open_fav(index_str: str):
+    if index_str != "q":
+        try:
+            index = int(index_str)
+            launch_app(favs[index - 1])
+        except IndexError:
+            print('Number is out of range')
+        except ValueError:
+            print('Invalid input. Please enter a number.')
+    else:
+        quit_rt()
     
 def launch_app(name: str):
     if name.startswith(("http://", "https://", "www.")) or ("." in name and "/" not in name):
@@ -33,11 +39,14 @@ def list_apps():
         print("Listing all apps is only supported on macOS rayterm.")
 
 def ask_ai(txt):
-    chat_history.append({"role": "user", "content": txt})
-    with OpenRouter(
-        api_key=API_KEY
-    ) as client:
-        response = client.chat.send(
+    if txt == "q":
+        quit_rt()
+    else:
+        chat_history.append({"role": "user", "content": txt})
+        with OpenRouter(
+            api_key=API_KEY
+        ) as client:
+            response = client.chat.send(
             model="openai/gpt-oss-20b",
             messages=chat_history,
             temperature=0.7
@@ -50,8 +59,10 @@ def ask_ai(txt):
         chat_history.append({"role": "assistant", "content": ai_msg.content})
 
 def search_browser(query):
-    launch_app(f"https://www.google.com/search?q={query}")
-
+    if query != "q":
+        quit_rt()
+    else:
+        launch_app(f"https://www.google.com/search?q={query}")
 
 def help_rt():
     print(
@@ -65,7 +76,7 @@ def help_rt():
     )
 
 def quit_rt():
-    print("\n Exiting rayterm. Goodbye!")
+    print("\nExiting rayterm. Goodbye!")
     sys.exit(0)
 
 def rt():
@@ -89,7 +100,7 @@ def rt():
             
             commands = {
                 '/l': list_apps,
-                '/f': lambda: open_fav(int(input('rayterm/fav > '))),
+                '/f': lambda: open_fav(input('rayterm/fav > ')),
                 '/b': lambda: search_browser(input('rayterm/browser > ')),
                 '/ai': lambda: ask_ai(input('rayterm/ai > ')),
                 'help': help_rt,
