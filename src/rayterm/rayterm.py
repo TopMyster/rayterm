@@ -103,4 +103,4 @@ def rt():
             else:
                 print("Not a known command. Type 'help' for assistance.")
         except KeyboardInterrupt:
-            print("\n Exiting rayterm. Goodbye!")
+            print("\nExiting rayterm. Goodbye!")
