@@ -59,7 +59,7 @@ def ask_ai(txt):
         chat_history.append({"role": "assistant", "content": ai_msg.content})
 
 def search_browser(query):
-    if query != "q":
+    if query == "q":
         quit_rt()
     else:
         launch_app(f"https://www.google.com/search?q={query}")
