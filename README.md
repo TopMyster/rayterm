@@ -1,7 +1,11 @@
 # Rayterm 
 #### Raycast for the terminal
 
-https://github.com/user-attachments/assets/c4a2160c-4f63-456b-ab93-5e0c00bdac15
+
+
+https://github.com/user-attachments/assets/4d5fd884-e656-47e2-9e1b-5abd7f80470f
+
+
 
 ## Installation/Configuration
 
