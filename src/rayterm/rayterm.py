@@ -14,7 +14,7 @@ def open_fav(index_str: str):
         except IndexError:
             print('Number is out of range')
         except ValueError:
-            print('Invalid input. Please enter a number.')
+            print('Invalid input. Please enter in a number.')
     else:
         quit_rt()
     
