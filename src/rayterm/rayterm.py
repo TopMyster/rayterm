@@ -1,6 +1,8 @@
 import os
 import sys
+import asyncio
 import webbrowser
+import python_weather
 from .config import *
 from openrouter import OpenRouter
 
@@ -70,6 +72,17 @@ def calc(expression):
     else:
         print(eval(expression))
 
+async def weather():
+    async with python_weather.Client(unit=python_weather.IMPERIAL) as client:
+        result = await client.get(LOCATION)
+        print(f"\nWeather for {LOCATION}:")
+        print(f"Current Temperature: {result.temperature}°F ({result.description})")
+        
+        print("\nForecast:")
+        for day in result.daily_forecasts:
+            print(f"{day.date}: {day.temperature}°F")
+        print("")
+
 def help_rt():
     print(
         'Commands:\n'
@@ -78,6 +91,7 @@ def help_rt():
         '  /b   - searches browser\n'
         '  /ai  - ask AI a question\n'
         '  /calc- a simple calculator\n'
+        '  weather - show current weather\n'
         '  help - shows list of commands\n'
         '  q    - quit rayterm\n'
     )
@@ -111,6 +125,7 @@ def rt():
                 '/b': lambda: search_browser(input('rayterm/browser > ')),
                 '/ai': lambda: ask_ai(input('rayterm/ai > ')),
                 '/calc': lambda: calc(input('rayterm/calc > ')),
+                'weather': lambda: asyncio.run(weather()),
                 'help': help_rt,
                 'q': quit_rt
             }
