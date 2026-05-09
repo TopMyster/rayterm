@@ -64,6 +64,12 @@ def search_browser(query):
     else:
         launch_app(f"https://www.google.com/search?q={query}")
 
+def calc(expression):
+    if expression == "q":
+        quit_rt()
+    else:
+        print(eval(expression))
+
 def help_rt():
     print(
         'Commands:\n'
@@ -71,6 +77,7 @@ def help_rt():
         '  /f   - open a favorite app by number\n'
         '  /b   - searches browser\n'
         '  /ai  - ask AI a question\n'
+        '  /calc- a simple calculator\n'
         '  help - shows list of commands\n'
         '  q    - quit rayterm\n'
     )
@@ -103,6 +110,7 @@ def rt():
                 '/f': lambda: open_fav(input('rayterm/fav > ')),
                 '/b': lambda: search_browser(input('rayterm/browser > ')),
                 '/ai': lambda: ask_ai(input('rayterm/ai > ')),
+                '/calc': lambda: calc(input('rayterm/calc > ')),
                 'help': help_rt,
                 'q': quit_rt
             }
