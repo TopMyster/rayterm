@@ -23,7 +23,10 @@ favs = [
     'Spotify', 
     'Chrome', 
     'Discord'
-    ]
+] #Add your favorite apps here
+
+#Location for weather
+LOCATION = 'New York' #Change to your location
 
 #Openrouter API Key
 API_KEY = 'sk-or-v1-...' # Your API KEY
@@ -60,6 +63,16 @@ ai
 Search the web
 ```
 /b
+```
+
+Performs simple calculations
+```
+/calc
+```
+
+Displays the weather in your location
+```
+weather
 ```
 
 Shows list of commands
