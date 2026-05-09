@@ -6,8 +6,22 @@ import webbrowser
 import python_weather
 from .config import *
 from openrouter import OpenRouter
+from prompt_toolkit import PromptSession
+from prompt_toolkit.completion import FuzzyCompleter, WordCompleter
+from prompt_toolkit.auto_suggest import AutoSuggest, Suggestion
 
 chat_history = []
+
+class AppCommandSuggest(AutoSuggest):
+    def __init__(self, options):
+        self.options = options
+    def get_suggestion(self, buffer, document):
+        text = document.text_before_cursor.strip()
+        if not text: return None
+        for opt in self.options:
+            if opt.lower().startswith(text.lower()):
+                return Suggestion(opt[len(text):])
+        return None
 
 def open_fav(index_str: str):
     if index_str != "q":
@@ -35,11 +49,26 @@ def launch_app(name: str):
         os.system(f'xdg-open "{name}"')
 
 def list_apps():
+    apps = []
     if sys.platform == "darwin":
         apps = [f for f in sorted(os.listdir("/Applications")) if f.endswith(".app")]
-        print("\n".join(apps))
+    elif sys.platform == "win32":
+        paths = [
+            os.path.join(os.environ.get('ProgramData', 'C:\\ProgramData'), 'Microsoft\\Windows\\Start Menu\\Programs'),
+            os.path.join(os.environ.get('AppData', ''), 'Microsoft\\Windows\\Start Menu\\Programs')
+        ]
+        for p in paths:
+            if os.path.exists(p):
+                apps.extend([f for f in os.listdir(p) if f.endswith('.lnk')])
+    else: 
+        apps_path = f'{os.environ.get("HOME")}/.local/share/applications'
+        if os.path.exists(apps_path):
+            apps = [f for f in os.listdir(apps_path) if f.endswith('.desktop')]
+    
+    if apps:
+        print("\n".join(sorted(apps)))
     else:
-        print("Listing all apps is only supported on macOS rayterm.")
+        print("No apps found on this platform.")
 
 def ask_ai(txt):
     if txt == "q":
@@ -93,11 +122,12 @@ def clock():
 def help_rt():
     print(
         'Commands:\n'
-        '  /l   - lists all apps (only available on macOS)\n'
+        '  /l   - lists all apps\n'
         '  /f   - open a favorite app by number\n'
         '  /b   - searches browser\n'
         '  /ai  - ask AI a question\n'
-        '  /calc- a simple calculator\n'
+        '  /calc - a simple calculator\n'
+        '  clock - shows current date and time\n'
         '  weather - show current weather\n'
         '  help - shows list of commands\n'
         '  q    - quit rayterm\n'
@@ -118,12 +148,35 @@ def rt():
         "              ╔═╝║                    \n"
         "              ╚══╝                    \n\n"
     )
+    
+    apps = []
+    if sys.platform == 'darwin':
+        apps = [f.replace('.app', '') for f in os.listdir('/Applications') if f.endswith('.app')]
+    elif sys.platform == 'win32':
+        paths = [
+            os.path.join(os.environ.get('ProgramData', 'C:\\ProgramData'), 'Microsoft\\Windows\\Start Menu\\Programs'),
+            os.path.join(os.environ.get('AppData', ''), 'Microsoft\\Windows\\Start Menu\\Programs')
+        ]
+        for p in paths:
+            if os.path.exists(p):
+                apps.extend([f.replace('.lnk', '') for f in os.listdir(p) if f.endswith('.lnk')])
+    else: # Linux
+        apps_path = '/usr/share/applications'
+        if os.path.exists(apps_path):
+            apps = [f.replace('.desktop', '') for f in os.listdir(apps_path) if f.endswith('.desktop')]
+
+    commands_list = ['/l', '/f', '/b', '/ai', '/calc', 'weather', 'clock', 'help', 'q']
+    all_options = commands_list + apps
+    completer = FuzzyCompleter(WordCompleter(all_options))
+    session = PromptSession(
+        completer=completer,
+        auto_suggest=AppCommandSuggest(all_options),
+        complete_while_typing=False
+    )
+
     while True:
         try:
-            prompt = input(
-                "rayterm > "
-            ).strip()
-
+            prompt = session.prompt("rayterm > ").strip()
             cmd = prompt.strip()
             
             commands = {
