@@ -1,6 +1,7 @@
 import os
 import sys
 import asyncio
+import datetime
 import webbrowser
 import python_weather
 from .config import *
@@ -83,6 +84,12 @@ async def weather():
             print(f"{day.date}: {day.temperature}°F")
         print("")
 
+
+
+def clock():
+    print(datetime.datetime.now().strftime("%H:%M %p"))
+    print(datetime.date.today().strftime("%m-%d-%Y"))
+
 def help_rt():
     print(
         'Commands:\n'
@@ -126,6 +133,7 @@ def rt():
                 '/ai': lambda: ask_ai(input('rayterm/ai > ')),
                 '/calc': lambda: calc(input('rayterm/calc > ')),
                 'weather': lambda: asyncio.run(weather()),
+                'clock': clock,
                 'help': help_rt,
                 'q': quit_rt
             }
