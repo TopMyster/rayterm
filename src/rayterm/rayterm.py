@@ -2,6 +2,7 @@ import os
 import sys
 import asyncio
 import datetime
+import platform
 import webbrowser
 import python_weather
 from .config import *
@@ -113,7 +114,12 @@ async def weather():
             print(f"{day.date}: {day.temperature}°F")
         print("")
 
-
+def sys_info():
+    print(f"\nPlatform: {platform.system()}")
+    print(f"Version: {platform.platform()}")
+    print(f"Python Version: {platform.python_version()}")
+    print(f"Architecture: {platform.machine()}\n")
+    
 
 def clock():
     print(datetime.datetime.now().strftime("%H:%M %p"))
@@ -129,6 +135,7 @@ def help_rt():
         '  /calc - a simple calculator\n'
         '  clock - shows current date and time\n'
         '  weather - show current weather\n'
+        '  sys - shows system information\n'
         '  help - shows list of commands\n'
         '  q    - quit rayterm\n'
     )
@@ -160,7 +167,7 @@ def rt():
         for p in paths:
             if os.path.exists(p):
                 apps.extend([f.replace('.lnk', '') for f in os.listdir(p) if f.endswith('.lnk')])
-    else: # Linux
+    else: 
         apps_path = '/usr/share/applications'
         if os.path.exists(apps_path):
             apps = [f.replace('.desktop', '') for f in os.listdir(apps_path) if f.endswith('.desktop')]
@@ -187,6 +194,7 @@ def rt():
                 '/calc': lambda: calc(input('rayterm/calc > ')),
                 'weather': lambda: asyncio.run(weather()),
                 'clock': clock,
+                'sys': sys_info,
                 'help': help_rt,
                 'q': quit_rt
             }
