@@ -5,13 +5,28 @@ import datetime
 import platform
 import webbrowser
 import python_weather
+import random
 from .config import *
 from openrouter import OpenRouter
 from prompt_toolkit import PromptSession
 from prompt_toolkit.completion import FuzzyCompleter, WordCompleter
 from prompt_toolkit.auto_suggest import AutoSuggest, Suggestion
 
-chat_history = []
+chat_history = [
+    {"role": "system", "content": "You are a helpful assistant for people using Rayterm you can help them navigate through it too . 'Commands:\n"
+        "  /l   - lists all apps\n"
+        "  /f   - open a favorite app by typing the number.\n"
+        "  /b   - searches using browser\n"
+        "  /ai  - ask AI a question\n"
+        "  /calc - a simple calculator\n"
+        "  clock - shows current date and time\n"
+        "  weather - show current weather forecast\n"
+        "  sys - shows your computers basic information\n"
+        "  help - shows list of commands\n"
+        "  dice - rolls a dice\n"
+        "  rick - Try and find out what it does ;)\n"
+        "  q    - quit rayterm get out of a / mode ex. getting out of /l mode\n"}
+]
 
 class AppCommandSuggest(AutoSuggest):
     def __init__(self, options):
@@ -37,20 +52,25 @@ def open_fav(index_str: str):
         quit_rt()
     
 def launch_app(name: str):
+    #Opening a url in a browser
     if name.startswith(("http://", "https://", "www.")) or ("." in name and "/" not in name):
         url = name if name.startswith("http") else f"https://{name}"
         webbrowser.open(url)
         return
 
+    #Opening an app with macOS
     if sys.platform == "darwin":
         os.system(f'open -a "{name}"')
-    elif os.name == "nt":
+    #Opening an app with Windows 
+    elif sys.platform == "win32":
         os.system(f'start "" "{name}"')
+    #Opening an app with Linux
     else:
         os.system(f'xdg-open "{name}"')
 
 def list_apps():
     apps = []
+    #Listing apps with macOS
     if sys.platform == "darwin":
         apps = [f for f in sorted(os.listdir("/Applications")) if f.endswith(".app")]
     elif sys.platform == "win32":
@@ -125,6 +145,12 @@ def clock():
     print(datetime.datetime.now().strftime("%H:%M %p"))
     print(datetime.date.today().strftime("%m-%d-%Y"))
 
+def roll_dice():
+    print(random.randint(1, 6))
+
+def rick_roll():
+    launch_app("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+
 def help_rt():
     print(
         'Commands:\n'
@@ -135,13 +161,15 @@ def help_rt():
         '  /calc - a simple calculator\n'
         '  clock - shows current date and time\n'
         '  weather - show current weather\n'
+        '  dice - rolls a dice\n'
         '  sys - shows system information\n'
         '  help - shows list of commands\n'
         '  q    - quit rayterm\n'
+        '  rick - Try and find out what it does ;)\n'
     )
 
 def quit_rt():
-    print("\nExiting rayterm. Goodbye!")
+    print("\nNow switching galaxies - Goodbye!")
     sys.exit(0)
 
 def rt():
@@ -172,7 +200,7 @@ def rt():
         if os.path.exists(apps_path):
             apps = [f.replace('.desktop', '') for f in os.listdir(apps_path) if f.endswith('.desktop')]
 
-    commands_list = ['/l', '/f', '/b', '/ai', '/calc', 'weather', 'clock', 'help', 'q']
+    commands_list = ['/l', '/f', '/b', '/ai', '/calc', 'weather', 'clock', 'help', 'q', 'dice', 'rick']
     all_options = commands_list + apps
     completer = FuzzyCompleter(WordCompleter(all_options))
     session = PromptSession(
@@ -196,7 +224,9 @@ def rt():
                 'clock': clock,
                 'sys': sys_info,
                 'help': help_rt,
-                'q': quit_rt
+                'q': quit_rt,
+                'dice': roll_dice,
+                'rick': rick_roll()
             }
 
             if cmd in commands:
@@ -206,4 +236,4 @@ def rt():
             else:
                 print("Not a known command. Type 'help' for assistance.")
         except KeyboardInterrupt:
-            print("\nExiting rayterm. Goodbye!")
+            print("\nNow switching galaxies - Goodbye!")
