@@ -9,6 +9,8 @@ import random
 from .config import *
 from openrouter import OpenRouter
 from prompt_toolkit import PromptSession
+from prompt_toolkit import prompt as pt_prompt
+from prompt_toolkit.formatted_text import HTML
 from prompt_toolkit.completion import FuzzyCompleter, WordCompleter
 from prompt_toolkit.auto_suggest import AutoSuggest, Suggestion
 
@@ -211,15 +213,16 @@ def rt():
 
     while True:
         try:
-            prompt = session.prompt("rayterm > ").strip()
-            cmd = prompt.strip()
+            main_prompt = HTML('<ansigreen><b>◆ rayterm</b></ansigreen> <ansicyan><b>❯</b></ansicyan> ')
+            prompt_str = session.prompt(main_prompt).strip()
+            cmd = prompt_str.strip()
             
             commands = {
                 '/l': list_apps,
-                '/f': lambda: open_fav(input('rayterm/fav > ')),
-                '/b': lambda: search_browser(input('rayterm/browser > ')),
-                '/ai': lambda: ask_ai(input('rayterm/ai > ')),
-                '/calc': lambda: calc(input('rayterm/calc > ')),
+                '/f': lambda: open_fav(pt_prompt(HTML('<ansigreen><b>◆ rayterm</b></ansigreen><ansiblue><b>/fav</b></ansiblue> <ansicyan><b>❯</b></ansicyan> '))),
+                '/b': lambda: search_browser(pt_prompt(HTML('<ansigreen><b>◆ rayterm</b></ansigreen><ansiyellow><b>/browser</b></ansiyellow> <ansicyan><b>❯</b></ansicyan> '))),
+                '/ai': lambda: ask_ai(pt_prompt(HTML('<ansigreen><b>◆ rayterm</b></ansigreen><ansimagenta><b>/ai</b></ansimagenta> <ansicyan><b>❯</b></ansicyan> '))),
+                '/calc': lambda: calc(pt_prompt(HTML('<ansigreen><b>◆ rayterm</b></ansigreen><ansired><b>/calc</b></ansired> <ansicyan><b>❯</b></ansicyan> '))),
                 'weather': lambda: asyncio.run(weather()),
                 'clock': clock,
                 'sys': sys_info,
