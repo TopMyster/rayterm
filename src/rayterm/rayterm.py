@@ -226,7 +226,7 @@ def rt():
                 'help': help_rt,
                 'q': quit_rt,
                 'dice': roll_dice,
-                'rick': rick_roll()
+                'rick': rick_roll
             }
 
             if cmd in commands:
