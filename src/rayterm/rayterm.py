@@ -213,16 +213,16 @@ def rt():
 
     while True:
         try:
-            main_prompt = HTML('<ansigreen><b>◆ rayterm</b></ansigreen> <ansicyan><b>❯</b></ansicyan> ')
+            main_prompt = HTML('<ansiblue><b>◆ rayterm</b></ansiblue> <ansiblue><b>❯</b></ansiblue> ')
             prompt_str = session.prompt(main_prompt).strip()
             cmd = prompt_str.strip()
             
             commands = {
                 '/l': list_apps,
-                '/f': lambda: open_fav(pt_prompt(HTML('<ansigreen><b>◆ rayterm</b></ansigreen><ansiblue><b>/fav</b></ansiblue> <ansicyan><b>❯</b></ansicyan> '))),
-                '/b': lambda: search_browser(pt_prompt(HTML('<ansigreen><b>◆ rayterm</b></ansigreen><ansiyellow><b>/browser</b></ansiyellow> <ansicyan><b>❯</b></ansicyan> '))),
-                '/ai': lambda: ask_ai(pt_prompt(HTML('<ansigreen><b>◆ rayterm</b></ansigreen><ansimagenta><b>/ai</b></ansimagenta> <ansicyan><b>❯</b></ansicyan> '))),
-                '/calc': lambda: calc(pt_prompt(HTML('<ansigreen><b>◆ rayterm</b></ansigreen><ansired><b>/calc</b></ansired> <ansicyan><b>❯</b></ansicyan> '))),
+                '/f': lambda: open_fav(pt_prompt(HTML('<ansiblue><b>◆ rayterm</b></ansiblue><ansicyan><b>/fav</b></ansicyan> <ansiblue><b>❯</b></ansiblue> '))),
+                '/b': lambda: search_browser(pt_prompt(HTML('<ansiblue><b>◆ rayterm</b></ansiblue><ansiyellow><b>/browser</b></ansiyellow> <ansiblue><b>❯</b></ansiblue> '))),
+                '/ai': lambda: ask_ai(pt_prompt(HTML('<ansiblue><b>◆ rayterm</b></ansiblue><ansimagenta><b>/ai</b></ansimagenta> <ansiblue><b>❯</b></ansiblue> '))),
+                '/calc': lambda: calc(pt_prompt(HTML('<ansiblue><b>◆ rayterm</b></ansiblue><ansired><b>/calc</b></ansired> <ansiblue><b>❯</b></ansiblue> '))),
                 'weather': lambda: asyncio.run(weather()),
                 'clock': clock,
                 'sys': sys_info,
