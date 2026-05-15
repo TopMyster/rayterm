@@ -9,6 +9,8 @@ import random
 from .config import *
 from openrouter import OpenRouter
 from prompt_toolkit import PromptSession
+
+THEME = THEME.strip().lower()
 from prompt_toolkit import prompt as pt_prompt
 from prompt_toolkit.formatted_text import HTML
 from prompt_toolkit.completion import FuzzyCompleter, WordCompleter
@@ -213,7 +215,7 @@ def rt():
 
     while True:
         try:
-            main_prompt = HTML('<ansiblue><b>◆ rayterm</b></ansiblue> <ansiblue><b>❯</b></ansiblue> ')
+            main_prompt = HTML(f'<ansi{THEME}><b>◆ rayterm</b></ansi{THEME}> <ansi{THEME}><b>❯</b></ansi{THEME}> ')
             prompt_str = session.prompt(main_prompt).strip()
             cmd = prompt_str.strip()
             

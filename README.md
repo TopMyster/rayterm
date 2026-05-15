@@ -18,17 +18,17 @@ Edit the configurations in config.py Ex:
 ```
 # Config
 
-#Favorite Apps
 favs = [
     'Spotify', 
     'Chrome', 
     'Discord'
 ] #Add your favorite apps here
 
-#Location for weather
+
+THEME = "blue" #Choose the theme color
+
 LOCATION = 'New York' #Change to your location
 
-#Openrouter API Key
 API_KEY = 'sk-or-v1-...' # Your API KEY
 ```
 
