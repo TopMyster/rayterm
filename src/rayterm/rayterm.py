@@ -6,15 +6,65 @@ import platform
 import webbrowser
 import python_weather
 import random
-from .config import *
 from openrouter import OpenRouter
 from prompt_toolkit import PromptSession
-
-THEME = THEME.strip().lower()
 from prompt_toolkit import prompt as pt_prompt
 from prompt_toolkit.formatted_text import HTML
 from prompt_toolkit.completion import FuzzyCompleter, WordCompleter
 from prompt_toolkit.auto_suggest import AutoSuggest, Suggestion
+
+CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.py")
+
+def is_first_run():
+    return not os.path.exists(CONFIG_PATH)
+
+def first_run_setup():
+    print(
+        "\n  ╔══════════════════════════════════════╗\n"
+        "  ║   Welcome to Rayterm! Let's set up.  ║\n"
+        "  ╚══════════════════════════════════════╝\n"
+    )
+
+    print("Set your favorite apps (comma-separated).")
+    print("  Default: Spotify, Chrome, Discord")
+    fav_input = input("  > ").strip()
+    if fav_input:
+        fav_list = [app.strip() for app in fav_input.split(",") if app.strip()]
+    else:
+        fav_list = ["Spotify", "Chrome", "Discord"]
+
+    print("\nChoose a theme color (e.g. Blue, Green, Red, Cyan, Magenta, Yellow).")
+    print("  Default: Blue")
+    theme_input = input("  > ").strip()
+    theme = theme_input if theme_input else "Blue"
+
+    print("\nSet your location for weather (e.g. New York, London, Tokyo).")
+    print("  Default: New York")
+    loc_input = input("  > ").strip()
+    location = loc_input if loc_input else "New York"
+
+    print("\nEnter your OpenRouter API key.")
+    print("  Default: sk-or-v1-your-key-here")
+    key_input = input("  > ").strip()
+    api_key = key_input if key_input else "sk-or-v1-your-key-here"
+
+    with open(CONFIG_PATH, "w") as f:
+        f.write(f"favs = {repr(fav_list)}\n")
+        f.write(f"THEME = {repr(theme)}\n")
+        f.write(f"LOCATION = {repr(location)}\n")
+        f.write(f"API_KEY = {repr(api_key)}\n")
+
+    print("\n  Setup complete! Launching Rayterm...\n")
+
+def load_config():
+    global favs, THEME, LOCATION, API_KEY
+    config = {}
+    with open(CONFIG_PATH, "r") as f:
+        exec(f.read(), config)
+    favs = config.get("favs", ["Spotify", "Chrome", "Discord"])
+    THEME = config.get("THEME", "Blue").strip().lower()
+    LOCATION = config.get("LOCATION", "New York")
+    API_KEY = config.get("API_KEY", "sk-or-v1-your-key-here")
 
 chat_history = [
     {"role": "system", "content": "You are a helpful assistant for people using Rayterm you can help them navigate through it too . 'Commands:\n"
@@ -56,25 +106,20 @@ def open_fav(index_str: str):
         quit_rt()
     
 def launch_app(name: str):
-    #Opening a url in a browser
     if name.startswith(("http://", "https://", "www.")) or ("." in name and "/" not in name):
         url = name if name.startswith("http") else f"https://{name}"
         webbrowser.open(url)
         return
 
-    #Opening an app with macOS
     if sys.platform == "darwin":
         os.system(f'open -a "{name}"')
-    #Opening an app with Windows 
     elif sys.platform == "win32":
         os.system(f'start "" "{name}"')
-    #Opening an app with Linux
     else:
         os.system(f'xdg-open "{name}"')
 
 def list_apps():
     apps = []
-    #Listing apps with macOS
     if sys.platform == "darwin":
         apps = [f for f in sorted(os.listdir("/Applications")) if f.endswith(".app")]
     elif sys.platform == "win32":
@@ -128,15 +173,20 @@ def calc(expression):
         print(eval(expression))
 
 async def weather():
-    async with python_weather.Client(unit=python_weather.IMPERIAL) as client:
-        result = await client.get(LOCATION)
-        print(f"\nWeather for {LOCATION}:")
-        print(f"Current Temperature: {result.temperature}°F ({result.description})")
-        
-        print("\nForecast:")
-        for day in result.daily_forecasts:
-            print(f"{day.date}: {day.temperature}°F")
-        print("")
+    try:
+        async with python_weather.Client(unit=python_weather.IMPERIAL) as client:
+            result = await client.get(LOCATION)
+            print(f"\nWeather for {LOCATION}:")
+            print(f"Current Temperature: {result.temperature}°F ({result.description})")
+            
+            print("\nForecast:")
+            for day in result.daily_forecasts:
+                print(f"{day.date}: {day.temperature}°F")
+            print("")
+    except KeyError:
+        print(f"\nCouldn't fetch weather for '{LOCATION}'. Try using just the city name (e.g. 'Houston' instead of 'Houston, Texas').")
+    except Exception as e:
+        print(f"\nWeather error: {e}")
 
 def sys_info():
     print(f"\nPlatform: {platform.system()}")
@@ -177,6 +227,10 @@ def quit_rt():
     sys.exit(0)
 
 def rt():
+    if is_first_run():
+        first_run_setup()
+    load_config()
+
     print(
         "    ╔═══╗           ╔╗                \n"
         "    ║╔═╗║          ╔╝╚╗               \n"
