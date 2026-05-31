@@ -121,7 +121,7 @@ def launch_app(name: str):
 def list_apps():
     apps = []
     if sys.platform == "darwin":
-        apps = [f for f in sorted(os.listdir("/Applications")) if f.endswith(".app")]
+        apps = [f.replace('.app', '') for f in sorted(os.listdir("/Applications")) if f.endswith(".app")]
     elif sys.platform == "win32":
         paths = [
             os.path.join(os.environ.get('ProgramData', 'C:\\ProgramData'), 'Microsoft\\Windows\\Start Menu\\Programs'),
@@ -135,6 +135,8 @@ def list_apps():
         if os.path.exists(apps_path):
             apps = [f for f in os.listdir(apps_path) if f.endswith('.desktop')]
     
+    for app in apps:
+        app.replace('.app', ' ')
     if apps:
         print("\n".join(sorted(apps)))
     else:
