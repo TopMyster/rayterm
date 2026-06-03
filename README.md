@@ -14,35 +14,19 @@ First, clone the repository
 git clone https://github.com/TopMyster/rayterm/tree/main
 ```
 
-Edit the configurations in config.py Ex:
-```
-# Config
-
-favs = [
-    'Spotify', 
-    'Chrome', 
-    'Discord'
-] #Add your favorite apps here
-
-
-THEME = "blue" #Choose the theme color
-
-LOCATION = 'New York' #Change to your location
-
-API_KEY = 'sk-or-v1-...' # Your API KEY
-```
-
-To install, while in project location run:
+To install, while in the project location run:
 
 ```bash
-pip3 install -e .
+pip3 install .
 ```
 
-Once installation is complete, use the rayterm with:
+Once installation is complete, start rayterm by running:
 
 ```bash
 rt
 ```
+
+On its first run, it will guide you through an interactive setup to configure your favorite apps, theme, location, and API key.
 
 ## Commands
 Enter the index of your favorite apps to open them quickly
